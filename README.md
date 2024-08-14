@@ -8,4 +8,4 @@ Inspired by Avaritia.
 
 # Demonstration
 
-![video](https://github.com/user-attachments/assets/56e6c564-dfad-45e1-b4c0-54e1b5f5947b)
+https://github.com/user-attachments/assets/56e6c564-dfad-45e1-b4c0-54e1b5f5947b
