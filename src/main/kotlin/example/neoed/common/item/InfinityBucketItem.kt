@@ -19,7 +19,7 @@ import java.text.DecimalFormat
 
 object InfinityBucketItem : Item(
     Properties()
-        .stacksTo(64)
+        .stacksTo(1)
         .rarity(Rarity.EPIC)
         .fireResistant()
 ) {
@@ -45,6 +45,9 @@ object InfinityBucketItem : Item(
 
     override fun use(level: Level, player: Player, usedHand: InteractionHand): InteractionResultHolder<ItemStack> {
         val usedItem = player.getItemInHand(usedHand)
+        if (usedItem.count != 1) {
+            return InteractionResultHolder.fail(usedItem)
+        }
 
         val hitResult = getPlayerPOVHitResult(level, player, ClipContext.Fluid.SOURCE_ONLY)
         if (hitResult.type != HitResult.Type.BLOCK) {
@@ -53,7 +56,7 @@ object InfinityBucketItem : Item(
 
         val hitPos = hitResult.blockPos
         if (player.mayInteract(level, hitPos)) {
-            val pickUpResult = FluidUtil.tryPickUpFluid(usedItem, player, level, hitPos, hitResult.direction);
+            val pickUpResult = FluidUtil.tryPickUpFluid(usedItem, player, level, hitPos, hitResult.direction)
             if (pickUpResult.isSuccess) {
                 return InteractionResultHolder.success(pickUpResult.getResult())
             }
@@ -73,7 +76,7 @@ object InfinityBucketItem : Item(
 
     private fun FluidStack.toMessageComponent(): Component {
         val displayName = this.hoverName
-        val amount = DecimalFormat(",###").format(this.amount)
+        val amount = FMT.format(this.amount)
         return displayName.copy().apply {
             append(" ")
             append(amount)
@@ -82,3 +85,5 @@ object InfinityBucketItem : Item(
         }
     }
 }
+
+private val FMT = DecimalFormat(",###")
