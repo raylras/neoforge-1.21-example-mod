@@ -5,14 +5,11 @@ import com.google.gson.JsonObject
 import com.mojang.math.Transformation
 import example.neoed.Neoed
 import net.minecraft.client.multiplayer.ClientLevel
+import net.minecraft.client.renderer.RenderType
 import net.minecraft.client.renderer.block.model.ItemOverrides
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite
 import net.minecraft.client.renderer.texture.TextureAtlasSprite
-import net.minecraft.client.resources.model.BakedModel
-import net.minecraft.client.resources.model.BlockModelRotation
-import net.minecraft.client.resources.model.Material
-import net.minecraft.client.resources.model.ModelBaker
-import net.minecraft.client.resources.model.ModelState
+import net.minecraft.client.resources.model.*
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.inventory.InventoryMenu
@@ -20,16 +17,14 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.material.Fluid
 import net.minecraft.world.level.material.Fluids
 import net.neoforged.neoforge.client.ClientHooks
+import net.neoforged.neoforge.client.NeoForgeRenderTypes
+import net.neoforged.neoforge.client.RenderTypeGroup
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions
 import net.neoforged.neoforge.client.model.CompositeModel
 import net.neoforged.neoforge.client.model.DynamicFluidContainerModel
 import net.neoforged.neoforge.client.model.QuadTransformers
 import net.neoforged.neoforge.client.model.SimpleModelState
-import net.neoforged.neoforge.client.model.geometry.IGeometryBakingContext
-import net.neoforged.neoforge.client.model.geometry.IGeometryLoader
-import net.neoforged.neoforge.client.model.geometry.IUnbakedGeometry
-import net.neoforged.neoforge.client.model.geometry.StandaloneGeometryBakingContext
-import net.neoforged.neoforge.client.model.geometry.UnbakedGeometryHelper
+import net.neoforged.neoforge.client.model.geometry.*
 import net.neoforged.neoforge.fluids.FluidStack
 import net.neoforged.neoforge.fluids.FluidType
 import net.neoforged.neoforge.fluids.FluidUtil
@@ -57,7 +52,7 @@ class InfinityBucketItemModel(private val fluid: Fluid = Fluids.EMPTY) : IUnbake
         val fluidSprite = spriteGetter.getSpriteOrNull(fluid)
 
         // determine particle
-        var particleSprite = fluidSprite ?: baseSprite ?: spriteGetter.defaultSprite()
+        val particleSprite = fluidSprite ?: baseSprite ?: spriteGetter.defaultSprite()
 
         // We need to disable GUI 3D and block lighting for this to render properly
         val itemContext = StandaloneGeometryBakingContext.builder(context)
@@ -94,7 +89,6 @@ class InfinityBucketItemModel(private val fluid: Fluid = Fluids.EMPTY) : IUnbake
 
             // apply light
             val lightLevel = fluid.fluidType.lightLevel
-            val renderTypes = DynamicFluidContainerModel.getLayerRenderTypes(lightLevel > 0)
             if (lightLevel > 0) {
                 QuadTransformers.settingEmissivity(lightLevel).processInPlace(quads)
             }
@@ -104,6 +98,12 @@ class InfinityBucketItemModel(private val fluid: Fluid = Fluids.EMPTY) : IUnbake
             if (color != -1) {
                 QuadTransformers.applyingColor(color).processInPlace(quads)
             }
+
+            // set render type
+            val renderTypes = RenderTypeGroup(
+                RenderType.SOLID,
+                NeoForgeRenderTypes.ITEM_LAYERED_SOLID.get()
+            )
 
             modelBuilder.addQuads(renderTypes, quads)
         }
@@ -116,7 +116,7 @@ class InfinityBucketItemModel(private val fluid: Fluid = Fluids.EMPTY) : IUnbake
         private val baker: ModelBaker,
         private val owner: IGeometryBakingContext
     ) : ItemOverrides() {
-        private val cache: MutableMap<Fluid, BakedModel> = mutableMapOf<Fluid, BakedModel>()
+        private val cache: MutableMap<Fluid, BakedModel> = mutableMapOf()
 
         override fun resolve(
             originalModel: BakedModel,
@@ -127,7 +127,7 @@ class InfinityBucketItemModel(private val fluid: Fluid = Fluids.EMPTY) : IUnbake
         ): BakedModel? {
             return FluidUtil.getFluidContained(stack)
                 .map(FluidStack::getFluid)
-                .map<BakedModel> { fluid ->
+                .map { fluid ->
                     cache.computeIfAbsent(fluid) {
                         val unbaked = InfinityBucketItemModel(fluid)
                         val baked = unbaked.bake(owner, baker, Material::sprite, BlockModelRotation.X0_Y0, this)
