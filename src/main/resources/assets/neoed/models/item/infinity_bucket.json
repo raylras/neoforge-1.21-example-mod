@@ -2,7 +2,7 @@
     "loader": "neoed:infinity_bucket_loader",
     "parent": "neoforge:item/default",
     "textures": {
-        "base": "minecraft:item/bucket",
+        "base": "neoed:item/infinity_bucket",
         "mask": "neoed:item/infinity_bucket_fluid_mask"
     }
 }
