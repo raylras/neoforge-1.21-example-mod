@@ -6,8 +6,10 @@ import example.neoed.common.item.InfinityBucketItem
 import example.neoed.common.item.InfinityBucketWrapper
 import example.neoed.common.item.NeoedCreativeModeTabs
 import example.neoed.common.item.NeoedItems
-import example.neoed.common.network.InfinityBucketScrollingPayload
-import example.neoed.common.network.InfinityBucketScrollingPayloadHandler
+import example.neoed.common.network.CrouchScrollPayload
+import example.neoed.common.network.HoverScrollPayload
+import example.neoed.server.network.CrouchScrollHandler
+import example.neoed.server.network.HoverScrollHandler
 import net.minecraft.resources.ResourceLocation
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.common.EventBusSubscriber
@@ -59,9 +61,14 @@ object Neoed {
     fun onRegisterPayloadHandlers(event: RegisterPayloadHandlersEvent) {
         val registrar = event.registrar("1")
         registrar.playToServer(
-            InfinityBucketScrollingPayload.TYPE,
-            InfinityBucketScrollingPayload.STREAM_CODEC,
-            InfinityBucketScrollingPayloadHandler()
+            HoverScrollPayload.TYPE,
+            HoverScrollPayload.STREAM_CODEC,
+            HoverScrollHandler
+        )
+        registrar.playToServer(
+            CrouchScrollPayload.TYPE,
+            CrouchScrollPayload.STREAM_CODEC,
+            CrouchScrollHandler
         )
     }
 }
