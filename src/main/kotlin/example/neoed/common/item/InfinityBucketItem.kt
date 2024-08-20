@@ -1,7 +1,10 @@
 package example.neoed.common.item
 
-import example.neoed.common.component.getFluidStacks
+import example.neoed.common.component.getFluidContents
+import net.minecraft.ChatFormatting
+import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResultHolder
 import net.minecraft.world.entity.Entity
@@ -15,7 +18,10 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.phys.HitResult
 import net.neoforged.neoforge.fluids.FluidStack
 import net.neoforged.neoforge.fluids.FluidUtil
+import net.neoforged.neoforge.fluids.SimpleFluidContent
 import java.text.DecimalFormat
+
+const val MAX_SHOWN_LIST_FLUIDS = 9
 
 object InfinityBucketItem : Item(
     Properties()
@@ -29,16 +35,29 @@ object InfinityBucketItem : Item(
         tooltipComponents: MutableList<Component>,
         tooltipFlag: TooltipFlag
     ) {
-        val fluids: List<FluidStack> = stack.getFluidStacks()
-        for (fluid in fluids) {
-            tooltipComponents.add(fluid.toMessageComponent())
+        val fluids: List<SimpleFluidContent> = stack.getFluidContents()
+        for ((index, fluid) in fluids.withIndex()) {
+            when {
+                index < MAX_SHOWN_LIST_FLUIDS -> {
+                    tooltipComponents.add(fluid.toMessageComponent())
+                }
+
+                index >= MAX_SHOWN_LIST_FLUIDS && Screen.hasShiftDown() -> {
+                    tooltipComponents.add(fluid.toMessageComponent().withStyle(ChatFormatting.GRAY))
+                }
+            }
+        }
+
+        val collapse = fluids.size - MAX_SHOWN_LIST_FLUIDS
+        if (collapse > 0 && !Screen.hasShiftDown()) {
+            tooltipComponents.add(Component.literal("...+$collapse").withStyle(ChatFormatting.GRAY))
         }
     }
 
     override fun inventoryTick(stack: ItemStack, level: Level, entity: Entity, slotId: Int, isSelected: Boolean) {
-        if (entity is Player && entity.getInventory().getSelected() == stack) {
-            FluidUtil.getFluidContained(stack).ifPresent { fluid ->
-                entity.displayClientMessage(fluid.toMessageComponent(), true)
+        if (entity is Player && entity.inventory.getSelected() == stack) {
+            stack.getFluidContents().firstOrNull()?.let {
+                entity.displayClientMessage(it.toMessageComponent(), true)
             }
         }
     }
@@ -74,8 +93,8 @@ object InfinityBucketItem : Item(
         return InteractionResultHolder.pass(usedItem)
     }
 
-    private fun FluidStack.toMessageComponent(): Component {
-        val displayName = this.hoverName
+    private fun SimpleFluidContent.toMessageComponent(): MutableComponent {
+        val displayName = this.fluidType.description
         val amount = FMT.format(this.amount)
         return displayName.copy().apply {
             append(" ")
