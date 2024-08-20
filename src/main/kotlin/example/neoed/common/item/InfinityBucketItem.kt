@@ -1,6 +1,7 @@
 package example.neoed.common.item
 
 import example.neoed.common.component.getFluidContents
+import example.neoed.common.util.ReadableNumber
 import net.minecraft.ChatFormatting
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
@@ -19,7 +20,6 @@ import net.minecraft.world.phys.HitResult
 import net.neoforged.neoforge.fluids.FluidStack
 import net.neoforged.neoforge.fluids.FluidUtil
 import net.neoforged.neoforge.fluids.SimpleFluidContent
-import java.text.DecimalFormat
 
 const val MAX_SHOWN_LIST_FLUIDS = 9
 
@@ -39,11 +39,11 @@ object InfinityBucketItem : Item(
         for ((index, fluid) in fluids.withIndex()) {
             when {
                 index < MAX_SHOWN_LIST_FLUIDS -> {
-                    tooltipComponents.add(fluid.toMessageComponent())
+                    tooltipComponents.add(fluid.toFriendlyMessage())
                 }
 
                 index >= MAX_SHOWN_LIST_FLUIDS && Screen.hasShiftDown() -> {
-                    tooltipComponents.add(fluid.toMessageComponent().withStyle(ChatFormatting.GRAY))
+                    tooltipComponents.add(fluid.toFriendlyMessage().withStyle(ChatFormatting.GRAY))
                 }
             }
         }
@@ -57,7 +57,7 @@ object InfinityBucketItem : Item(
     override fun inventoryTick(stack: ItemStack, level: Level, entity: Entity, slotId: Int, isSelected: Boolean) {
         if (entity is Player && entity.inventory.getSelected() == stack) {
             stack.getFluidContents().firstOrNull()?.let {
-                entity.displayClientMessage(it.toMessageComponent(), true)
+                entity.displayClientMessage(it.toFriendlyMessage(), true)
             }
         }
     }
@@ -92,17 +92,14 @@ object InfinityBucketItem : Item(
 
         return InteractionResultHolder.pass(usedItem)
     }
-
-    private fun SimpleFluidContent.toMessageComponent(): MutableComponent {
-        val displayName = this.fluidType.description
-        val amount = FMT.format(this.amount)
-        return displayName.copy().apply {
-            append(" ")
-            append(amount)
-            append(" ")
-            append("mL")
-        }
-    }
 }
 
-private val FMT = DecimalFormat(",###")
+private fun SimpleFluidContent.toFriendlyMessage(): MutableComponent {
+    val displayName = this.fluidType.description
+    val (amount, unit) = ReadableNumber.from(this.amount)
+    return displayName.copy().apply {
+        append(" ")
+        append(amount)
+        append(unit)
+    }
+}
