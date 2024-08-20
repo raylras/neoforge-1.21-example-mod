@@ -101,8 +101,11 @@ neoForge {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
-    implementation('thedarkcolour:kotlinforforge-neoforge:5.3.0')
-    jarJar("thedarkcolour:kotlinforforge-neoforge:5.3.0")
+    implementation('thedarkcolour:kotlinforforge-neoforge:5.4.0')
+    jarJar("thedarkcolour:kotlinforforge-neoforge:5.4.0")
+    jarJar("thedarkcolour:kffmod-neoforge:5.4.0")
+    jarJar("thedarkcolour:kfflib-neoforge:5.4.0")
+    jarJar("thedarkcolour:kfflang-neoforge:5.4.0")
 
     // Example mod dependency with JEI
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
