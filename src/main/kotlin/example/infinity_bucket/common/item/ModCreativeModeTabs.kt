@@ -1,6 +1,6 @@
-package example.neoed.common.item
+package example.infinity_bucket.common.item
 
-import example.neoed.Neoed
+import example.infinity_bucket.InfinityBucketMod
 import net.minecraft.core.registries.Registries
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.CreativeModeTab
@@ -8,16 +8,16 @@ import net.minecraft.world.item.CreativeModeTabs
 import net.neoforged.neoforge.registries.DeferredRegister
 import thedarkcolour.kotlinforforge.neoforge.forge.getValue
 
-object NeoedCreativeModeTabs {
-    val REGISTRY = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Neoed.ID)
+object ModCreativeModeTabs {
+    val REGISTRY = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, InfinityBucketMod.ID)
 
-    val NEOED: CreativeModeTab by REGISTRY.register("neoed") { ->
+    val INFINITY_BUCKET_MOD: CreativeModeTab by REGISTRY.register("infinity_bucket_mod") { ->
         CreativeModeTab.builder()
             .withTabsBefore(CreativeModeTabs.COMBAT)
-            .title(Component.literal("Neoed"))
+            .title(Component.literal("Infinity Bucket"))
             .icon { -> InfinityBucketItem.defaultInstance }
             .displayItems { parameters, output ->
-                NeoedItems.REGISTRY.entries.forEach { output.accept(it.get()) }
+                ModItems.REGISTRY.entries.forEach { output.accept(it.get()) }
             }
             .build()
     }

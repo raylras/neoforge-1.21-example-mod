@@ -1,9 +1,9 @@
-package example.neoed.client.model
+package example.infinity_bucket.client.model
 
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonObject
 import com.mojang.math.Transformation
-import example.neoed.Neoed
+import example.infinity_bucket.InfinityBucketMod
 import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.client.renderer.block.model.ItemOverrides
@@ -58,7 +58,7 @@ class InfinityBucketItemModel(private val fluid: Fluid = Fluids.EMPTY) : IUnbake
         val itemContext = StandaloneGeometryBakingContext.builder(context)
             .withGui3d(false)
             .withUseBlockLight(false)
-            .build(ResourceLocation.fromNamespaceAndPath(Neoed.ID, "infinity_bucket"))
+            .build(ResourceLocation.fromNamespaceAndPath(InfinityBucketMod.ID, "infinity_bucket"))
         val modelBuilder = CompositeModel.Baked.builder(
             itemContext,
             particleSprite,

@@ -1,8 +1,8 @@
-package example.neoed.common.item
+package example.infinity_bucket.common.item
 
-import example.neoed.common.component.getFluidContents
-import example.neoed.common.component.getFluidStacks
-import example.neoed.common.component.setFluidStacks
+import example.infinity_bucket.common.component.getFluidContents
+import example.infinity_bucket.common.component.getFluidStacks
+import example.infinity_bucket.common.component.setFluidStacks
 import net.minecraft.world.item.ItemStack
 import net.neoforged.neoforge.fluids.FluidStack
 import net.neoforged.neoforge.fluids.FluidStack.isSameFluidSameComponents

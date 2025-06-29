@@ -1,10 +1,10 @@
-package example.neoed.client
+package example.infinity_bucket.client
 
-import example.neoed.common.component.getFluidContents
-import example.neoed.common.item.InfinityBucketItem
-import example.neoed.common.network.CrouchScrollPayload
-import example.neoed.common.network.HoverScrollPayload
-import example.neoed.common.network.Scroll
+import example.infinity_bucket.common.component.getFluidContents
+import example.infinity_bucket.common.item.InfinityBucketItem
+import example.infinity_bucket.common.network.CrouchScrollPayload
+import example.infinity_bucket.common.network.HoverScrollPayload
+import example.infinity_bucket.common.network.Scroll
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.neoforged.api.distmarker.Dist

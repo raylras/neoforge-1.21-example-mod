@@ -1,6 +1,6 @@
-package example.neoed.common.network
+package example.infinity_bucket.common.network
 
-import example.neoed.Neoed
+import example.infinity_bucket.InfinityBucketMod
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
@@ -15,7 +15,7 @@ data class HoverScrollPayload(val slotId: Int, val scroll: Scroll) : CustomPacke
     companion object {
         val TYPE: CustomPacketPayload.Type<HoverScrollPayload> = CustomPacketPayload.Type(
             ResourceLocation.fromNamespaceAndPath(
-                Neoed.ID,
+                InfinityBucketMod.ID,
                 "infinity_bucket_hover_scrolling"
             )
         )
@@ -34,7 +34,7 @@ data class CrouchScrollPayload(val scroll: Scroll) : CustomPacketPayload {
     companion object {
         val TYPE: CustomPacketPayload.Type<CrouchScrollPayload> = CustomPacketPayload.Type(
             ResourceLocation.fromNamespaceAndPath(
-                Neoed.ID,
+                InfinityBucketMod.ID,
                 "infinity_bucket_crouch_scrolling"
             )
         )

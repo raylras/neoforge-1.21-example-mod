@@ -1,11 +1,11 @@
-package example.neoed.server.network
+package example.infinity_bucket.server.network
 
-import example.neoed.common.component.getFluidStacks
-import example.neoed.common.component.setFluidStacks
-import example.neoed.common.item.InfinityBucketItem
-import example.neoed.common.network.CrouchScrollPayload
-import example.neoed.common.network.HoverScrollPayload
-import example.neoed.common.network.Scroll
+import example.infinity_bucket.common.component.getFluidStacks
+import example.infinity_bucket.common.component.setFluidStacks
+import example.infinity_bucket.common.item.InfinityBucketItem
+import example.infinity_bucket.common.network.CrouchScrollPayload
+import example.infinity_bucket.common.network.HoverScrollPayload
+import example.infinity_bucket.common.network.Scroll
 import net.minecraft.world.item.ItemStack
 import net.neoforged.neoforge.network.handling.IPayloadContext
 import net.neoforged.neoforge.network.handling.IPayloadHandler

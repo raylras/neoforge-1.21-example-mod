@@ -1,7 +1,7 @@
-package example.neoed.common.item
+package example.infinity_bucket.common.item
 
-import example.neoed.common.component.getFluidContents
-import example.neoed.common.util.ReadableNumber
+import example.infinity_bucket.common.component.getFluidContents
+import example.infinity_bucket.common.util.ReadableNumber
 import net.minecraft.ChatFormatting
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component

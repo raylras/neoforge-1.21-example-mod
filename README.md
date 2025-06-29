@@ -1,4 +1,4 @@
-# Neoed
+# Infinity Bucket Mod
 
 A NeoForge 1.21 example mod written in Kotlin.
 

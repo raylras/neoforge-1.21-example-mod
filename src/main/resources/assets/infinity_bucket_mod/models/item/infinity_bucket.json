@@ -1,0 +1,8 @@
+{
+    "loader": "infinity_bucket_mod:infinity_bucket_loader",
+    "parent": "neoforge:item/default",
+    "textures": {
+        "base": "infinity_bucket_mod:item/infinity_bucket",
+        "mask": "infinity_bucket_mod:item/infinity_bucket_fluid_mask"
+    }
+}

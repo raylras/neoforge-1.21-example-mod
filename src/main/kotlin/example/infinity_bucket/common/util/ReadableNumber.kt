@@ -1,4 +1,4 @@
-package example.neoed.common.util
+package example.infinity_bucket.common.util
 
 import java.text.DecimalFormat
 import kotlin.math.ln

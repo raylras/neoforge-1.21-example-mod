@@ -1,12 +1,12 @@
-package example.neoed.common.item
+package example.infinity_bucket.common.item
 
-import example.neoed.Neoed
+import example.infinity_bucket.InfinityBucketMod
 import net.neoforged.neoforge.registries.DeferredRegister
 
 import thedarkcolour.kotlinforforge.neoforge.forge.getValue
 
-object NeoedItems {
-    val REGISTRY = DeferredRegister.createItems(Neoed.ID)
+object ModItems {
+    val REGISTRY = DeferredRegister.createItems(InfinityBucketMod.ID)
 
     val INFINITY_BUCKET_ITEM by REGISTRY.register("infinity_bucket") { -> InfinityBucketItem }
 }

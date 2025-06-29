@@ -1,9 +1,9 @@
 {
     "required": true,
     "minVersion": "0.8",
-    "package": "example.neoed.mixin",
+    "package": "example.infinity_bucket_mod.mixin",
     "compatibilityLevel": "JAVA_8",
-    "refmap": "neoed.refmap.json",
+    "refmap": "infinity_bucket_mod.refmap.json",
     "mixins": [
     ],
     "client": [

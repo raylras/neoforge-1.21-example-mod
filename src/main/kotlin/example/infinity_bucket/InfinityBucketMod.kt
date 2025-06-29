@@ -1,15 +1,15 @@
-package example.neoed
+package example.infinity_bucket
 
-import example.neoed.client.model.InfinityBucketItemModel
-import example.neoed.common.component.NeoedDataComponents
-import example.neoed.common.item.InfinityBucketItem
-import example.neoed.common.item.InfinityBucketWrapper
-import example.neoed.common.item.NeoedCreativeModeTabs
-import example.neoed.common.item.NeoedItems
-import example.neoed.common.network.CrouchScrollPayload
-import example.neoed.common.network.HoverScrollPayload
-import example.neoed.server.network.CrouchScrollHandler
-import example.neoed.server.network.HoverScrollHandler
+import example.infinity_bucket.client.model.InfinityBucketItemModel
+import example.infinity_bucket.common.component.ModDataComponents
+import example.infinity_bucket.common.item.InfinityBucketItem
+import example.infinity_bucket.common.item.InfinityBucketWrapper
+import example.infinity_bucket.common.item.ModCreativeModeTabs
+import example.infinity_bucket.common.item.ModItems
+import example.infinity_bucket.common.network.CrouchScrollPayload
+import example.infinity_bucket.common.network.HoverScrollPayload
+import example.infinity_bucket.server.network.CrouchScrollHandler
+import example.infinity_bucket.server.network.HoverScrollHandler
 import net.minecraft.resources.ResourceLocation
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.common.EventBusSubscriber
@@ -20,15 +20,15 @@ import net.neoforged.neoforge.client.event.ModelEvent.RegisterGeometryLoaders
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent
 import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
 
-@Mod(Neoed.ID)
+@Mod(InfinityBucketMod.ID)
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
-object Neoed {
-    const val ID = "neoed"
+object InfinityBucketMod {
+    const val ID = "infinity_bucket_mod"
 
     init {
-        NeoedItems.REGISTRY.register(MOD_BUS)
-        NeoedDataComponents.REGISTRY.register(MOD_BUS)
-        NeoedCreativeModeTabs.REGISTRY.register(MOD_BUS)
+        ModItems.REGISTRY.register(MOD_BUS)
+        ModDataComponents.REGISTRY.register(MOD_BUS)
+        ModCreativeModeTabs.REGISTRY.register(MOD_BUS)
     }
 
     /*
