@@ -1,7 +1,7 @@
 package example.infinity_bucket.server.network
 
-import example.infinity_bucket.common.component.getFluidStacks
-import example.infinity_bucket.common.component.setFluidStacks
+import example.infinity_bucket.common.fluid.getFluidContents
+import example.infinity_bucket.common.fluid.setFluidContents
 import example.infinity_bucket.common.item.InfinityBucketItem
 import example.infinity_bucket.common.network.CrouchScrollPayload
 import example.infinity_bucket.common.network.HoverScrollPayload
@@ -26,16 +26,16 @@ object HoverScrollHandler: IPayloadHandler<HoverScrollPayload> {
 private fun handleScroll(scroll: Scroll, bucket: ItemStack) {
     if (bucket.item != InfinityBucketItem) return
 
-    val fluids = bucket.getFluidStacks()
-    if (fluids.size <= 1) return
+    val contents = bucket.getFluidContents().toMutableList()
+    if (contents.size <= 1) return
 
     if (scroll.down) {
-        val first = fluids.removeFirst()
-        fluids.addLast(first)
-        bucket.setFluidStacks(fluids)
+        val first = contents.removeFirst()
+        contents.addLast(first)
+        bucket.setFluidContents(contents)
     } else if (scroll.up) {
-        val last = fluids.removeLast()
-        fluids.addFirst(last)
-        bucket.setFluidStacks(fluids)
+        val last = contents.removeLast()
+        contents.addFirst(last)
+        bucket.setFluidContents(contents)
     }
 }

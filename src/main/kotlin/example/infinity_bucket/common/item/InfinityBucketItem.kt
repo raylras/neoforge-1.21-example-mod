@@ -1,6 +1,7 @@
 package example.infinity_bucket.common.item
 
-import example.infinity_bucket.common.component.getFluidContents
+import example.infinity_bucket.common.fluid.FluidContent
+import example.infinity_bucket.common.fluid.getFluidContents
 import example.infinity_bucket.common.util.ReadableNumber
 import net.minecraft.ChatFormatting
 import net.minecraft.client.gui.screens.Screen
@@ -19,7 +20,6 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.phys.HitResult
 import net.neoforged.neoforge.fluids.FluidStack
 import net.neoforged.neoforge.fluids.FluidUtil
-import net.neoforged.neoforge.fluids.SimpleFluidContent
 
 const val MAX_SHOWN_LIST_FLUIDS = 9
 
@@ -35,20 +35,20 @@ object InfinityBucketItem : Item(
         tooltipComponents: MutableList<Component>,
         tooltipFlag: TooltipFlag
     ) {
-        val fluids: List<SimpleFluidContent> = stack.getFluidContents()
-        for ((index, fluid) in fluids.withIndex()) {
+        val contents: List<FluidContent> = stack.getFluidContents()
+        for ((index, content) in contents.withIndex()) {
             when {
                 index < MAX_SHOWN_LIST_FLUIDS -> {
-                    tooltipComponents.add(fluid.toFriendlyMessage())
+                    tooltipComponents.add(content.toFriendlyMessage())
                 }
 
                 index >= MAX_SHOWN_LIST_FLUIDS && Screen.hasShiftDown() -> {
-                    tooltipComponents.add(fluid.toFriendlyMessage().withStyle(ChatFormatting.GRAY))
+                    tooltipComponents.add(content.toFriendlyMessage().withStyle(ChatFormatting.GRAY))
                 }
             }
         }
 
-        val collapse = fluids.size - MAX_SHOWN_LIST_FLUIDS
+        val collapse = contents.size - MAX_SHOWN_LIST_FLUIDS
         if (collapse > 0 && !Screen.hasShiftDown()) {
             tooltipComponents.add(Component.literal("...+$collapse").withStyle(ChatFormatting.GRAY))
         }
@@ -94,8 +94,8 @@ object InfinityBucketItem : Item(
     }
 }
 
-private fun SimpleFluidContent.toFriendlyMessage(): MutableComponent {
-    val displayName = this.fluidType.description
+private fun FluidContent.toFriendlyMessage(): MutableComponent {
+    val displayName = this.fluid.fluidType.description
     val (amount, unit) = ReadableNumber.from(this.amount)
     return displayName.copy().apply {
         append(" ")

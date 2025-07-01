@@ -1,12 +1,11 @@
 package example.infinity_bucket.common.item
 
-import example.infinity_bucket.common.component.getFluidContents
-import example.infinity_bucket.common.component.getFluidStacks
-import example.infinity_bucket.common.component.setFluidStacks
+import example.infinity_bucket.common.fluid.FluidContent
+import example.infinity_bucket.common.fluid.getFluidContents
+import example.infinity_bucket.common.fluid.setFluidContents
+import example.infinity_bucket.common.fluid.toFluidContentWithAmount
 import net.minecraft.world.item.ItemStack
 import net.neoforged.neoforge.fluids.FluidStack
-import net.neoforged.neoforge.fluids.FluidStack.isSameFluidSameComponents
-import net.neoforged.neoforge.fluids.SimpleFluidContent
 import net.neoforged.neoforge.fluids.capability.IFluidHandler
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem
 
@@ -15,7 +14,9 @@ class InfinityBucketWrapper(private val container: ItemStack) : IFluidHandlerIte
 
     override fun getTanks(): Int = container.getFluidContents().size.coerceAtLeast(1)
 
-    override fun getFluidInTank(tank: Int): FluidStack = container.getFluidStacks().getOrNull(tank) ?: FluidStack.EMPTY
+    override fun getFluidInTank(tank: Int): FluidStack {
+        return container.getFluidContents().getOrElse(tank) { FluidContent.EMPTY }.toFluidStack()
+    }
 
     override fun getTankCapacity(tank: Int): Int = Integer.MAX_VALUE
 
@@ -26,17 +27,21 @@ class InfinityBucketWrapper(private val container: ItemStack) : IFluidHandlerIte
             return 0
         }
 
-        val fluids = container.getFluidStacks()
-        val contained: FluidStack = fluids
-            .firstOrNull { isSameFluidSameComponents(resource, it) }
-            ?: resource.copyWithAmount(0)
-        val fillAmount: Int = (Integer.MAX_VALUE - contained.amount).coerceAtMost(resource.amount)
+        val contents = container.getFluidContents()
+        val content = contents.firstOrNull { it.isSameFluidSameComponents(resource) } ?: resource.toFluidContentWithAmount(0)
+
+        val availableAmount = Long.MAX_VALUE - content.amount
+        val fillAmount = resource.amount.toLong()
+            .coerceAtMost(availableAmount)
+            .coerceAtMost(Int.MAX_VALUE.toLong())
+            .toInt()
 
         if (action.execute()) {
-            contained.grow(fillAmount)
-            fluids.remove(contained)
-            fluids.addFirst(contained)
-            container.setFluidStacks(fluids)
+            val newContents = contents.toMutableList()
+            val newContent = content.copyWithAmount(content.amount + fillAmount)
+            newContents.remove(content)
+            newContents.addFirst(newContent)
+            container.setFluidContents(newContents)
         }
 
         return fillAmount
@@ -46,10 +51,12 @@ class InfinityBucketWrapper(private val container: ItemStack) : IFluidHandlerIte
         if (container.count != 1 || resource.isEmpty) {
             return FluidStack.EMPTY
         }
-        val contained = container.getFluidContents().firstOrNull() ?: SimpleFluidContent.EMPTY
-        if (!contained.isSameFluidSameComponents(resource)) {
+
+        val content = container.getFluidContents().getOrElse(0) { FluidContent.EMPTY }
+        if (!content.isSameFluidSameComponents(resource)) {
             return FluidStack.EMPTY
         }
+
         return drain(resource.amount, action)
     }
 
@@ -58,17 +65,22 @@ class InfinityBucketWrapper(private val container: ItemStack) : IFluidHandlerIte
             return FluidStack.EMPTY
         }
 
-        val fluids = container.getFluidStacks()
-        val contained: FluidStack = fluids.firstOrNull() ?: FluidStack.EMPTY
-        val drainAmount: Int = maxDrain.coerceAtMost(contained.amount)
-        val drained: FluidStack = contained.copyWithAmount(drainAmount)
-
-        if (action.execute()) {
-            contained.shrink(drainAmount)
-            fluids.removeIf { it.isEmpty }
-            container.setFluidStacks(fluids)
+        val contents = container.getFluidContents()
+        if (contents.isEmpty()) {
+            return FluidStack.EMPTY
         }
 
-        return drained
+        val content = contents.first()
+        val drainAmount = content.amount.coerceAtMost(maxDrain.toLong())
+        val stack = FluidStack(content.fluid, drainAmount.toInt())
+
+        if (action.execute()) {
+            val newContents = contents.toMutableList()
+            val newContent = content.copyWithAmount(content.amount - drainAmount)
+            newContents[0] = newContent
+            container.setFluidContents(newContents)
+        }
+
+        return stack
     }
 }

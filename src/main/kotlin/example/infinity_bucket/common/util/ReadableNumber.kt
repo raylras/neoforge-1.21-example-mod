@@ -11,7 +11,7 @@ private val FMT = DecimalFormat("#.###")
 
 data class ReadableNumber(val number: String, val unit: String) {
     companion object {
-        fun from(mB: Int): ReadableNumber {
+        fun from(mB: Long): ReadableNumber {
             if (mB < SI_BASE) {
                 return ReadableNumber(mB.toString(), "m${BUCKET_UNIT}")
             }
@@ -19,7 +19,7 @@ data class ReadableNumber(val number: String, val unit: String) {
             return ReadableNumber(FMT.format(mB / SI_BASE.toDouble().pow(exp.toDouble())), SI_POSTFIX[exp - 1])
         }
 
-        fun format(mB: Int): String {
+        fun format(mB: Long): String {
             if (mB < SI_BASE) {
                 return "${mB}m${BUCKET_UNIT}"
             }

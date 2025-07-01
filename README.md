@@ -2,7 +2,9 @@
 
 A NeoForge 1.21 example mod written in Kotlin.
 
-This mod introduces an item called "Infinity Bucket" which can store multiple fluids, with each fluid's capacity up to `Integer.MAX_VALUE`.
+This mod introduces an item called "Infinity Bucket" which can store multiple fluids, with each fluid's capacity ~~up to `Integer.MAX_VALUE`~~.
+
+Update: Now capacity up to `Long.MAX_VALUE`
 
 Inspired by Avaritia.
 

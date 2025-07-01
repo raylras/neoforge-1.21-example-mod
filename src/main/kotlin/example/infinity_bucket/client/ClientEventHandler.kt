@@ -1,6 +1,6 @@
 package example.infinity_bucket.client
 
-import example.infinity_bucket.common.component.getFluidContents
+import example.infinity_bucket.common.fluid.getFluidContents
 import example.infinity_bucket.common.item.InfinityBucketItem
 import example.infinity_bucket.common.network.CrouchScrollPayload
 import example.infinity_bucket.common.network.HoverScrollPayload
